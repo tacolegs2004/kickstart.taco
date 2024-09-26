@@ -2,7 +2,12 @@ return {
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
+		priority = 1000,
 	},
+	{
+		"rebelot/kanagawa.nvim"
+	},
+	{ "olimorris/onedarkpro.nvim" },
 	{ "craftzdog/solarized-osaka.nvim" },
 	{ "shaunsingh/oxocarbon.nvim" },
 	{ "ellisonleao/gruvbox.nvim" },
