@@ -388,6 +388,13 @@ require('lazy').setup({
   'numToStr/Comment.nvim',
 
   {
+
+    'mrcjkb/rustaceanvim',
+    version = '^5', -- Recommended
+    lazy = false, -- This plugin is already lazy
+  },
+
+  {
     'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
     dependencies = {
@@ -470,7 +477,6 @@ vim.wo.signcolumn = 'yes'
 -- Decrease update time
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
-
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
@@ -752,6 +758,7 @@ mason_lspconfig.setup {
     "html",
     "cssls",
     "tailwindcss",
+    "rust_analyzer",
     "svelte",
     "lua_ls",
     "graphql",
