@@ -53,6 +53,7 @@ vim.keymap.set("n", "<leader>fm", "<leader>gq <Enter>")
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set("n", "<leader>rs", ":RustRun <CR>")
 
 vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
@@ -124,9 +125,9 @@ require('lazy').setup({
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
-    config = function()
-      vim.cmd([[colorscheme catppuccin-mocha]])
-    end
+    -- config = function()
+    --   vim.cmd([[colorscheme catppuccin-mocha]])
+    -- end
   },
   {
     "nvim-neorg/neorg",
@@ -169,51 +170,24 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
 
+      opts = {
+        setup = {
+          rust_analyzer = function()
+            return true
+          end,
+        },
+      },
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        opts = {}
+      },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
   },
-  -- {
-  -- "goolord/alpha-nvim",
-  -- dependencies = {
-  --   "nvim-tree/nvim-web-devicons",
-  -- },
-  --
-  -- config = function()
-  --   local alpha = require("alpha")
-  --   local dashboard = require("alpha.themes.startify")
-  --
-  --   dashboard.section.header.val = {
-  --     '',
-  --     '',
-  --     '888b    888                  888     888 d8b               ',
-  --     '8888b   888                  888     888 Y8P               ',
-  --     '88888b  888                  888     888                   ',
-  --     '888Y88b 888  .d88b.   .d88b. Y88b   d88P 888 88888b.d88b.  ',
-  --     '888 Y88b888 d8P  Y8b d88""88b Y88b d88P  888 888 "888 "88b ',
-  --     '888  Y88888 88888888 888  888  Y88o88P   888 888  888  888 ',
-  --     '888   Y8888 Y8b.     Y88..88P   Y888P    888 888  888  888 ',
-  --     '888    Y888  "Y8888   "Y88P"     Y8P     888 888  888  888 ',
-  --   }
-  --
-  --   dashboard.section.buttons.val = {
-  --     dashboard.button("p", "  Find project", ":Telescope projects <CR>"),
-  --     dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
-  --     dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
-  --     dashboard.button("t", "  Find text", ":Telescope live_grep <CR>"),
-  --     dashboard.button("m", "  BookMarks", ":Telescope marks <CR>"),
-  --     dashboard.button("r", "  Recently used files", ":Telescope oldfiles <CR>"),
-  --     dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua"),
-  --     dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
-  --   }
-  --
-  --   alpha.setup(dashboard.opts)
-  -- end,
-  -- },
   {
     "folke/trouble.nvim",
     opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -356,19 +330,19 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
-    opts = {
-      options = {
-        icons_enabled = false,
-        theme = 'auto',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
-  },
+  -- {
+  --   -- Set lualine as statusline
+  --   'nvim-lualine/lualine.nvim',
+  --   -- See `:help lualine.txt`
+  --   opts = {
+  --     options = {
+  --       icons_enabled = false,
+  --       theme = 'auto',
+  --       component_separators = '|',
+  --       section_separators = '',
+  --     },
+  --   },
+  -- },
 
   {
     -- Add indentation guides even on blank lines
@@ -391,7 +365,12 @@ require('lazy').setup({
 
     'mrcjkb/rustaceanvim',
     version = '^5', -- Recommended
-    lazy = false, -- This plugin is already lazy
+    lazy = false,   -- This plugin is already lazy
+    -- ["rust-analyzer"] = {
+    --   cargo = {
+    --     allFeatures = true
+    --   }
+    -- }
   },
 
   {
