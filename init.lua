@@ -50,6 +50,7 @@ vim.g.mapleader = " "
 vim.keymap.set("i", "jk", "<Esc>")
 vim.keymap.set("n", "<leader>ex", "<cmd>Ex <CR>")
 vim.keymap.set("n", "<leader>fm", "<leader>gq <Enter>")
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
