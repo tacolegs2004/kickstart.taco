@@ -1,6 +1,8 @@
 return {
-	"nvim-lua/plenary.nvim",
-
+	{
+		'sainnhe/gruvbox-material',
+		lazy = false,
+	},
 	{
 		"nvchad/ui",
 		config = function()
