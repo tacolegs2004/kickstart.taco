@@ -18,7 +18,6 @@ return {
 		end,
 	},
 
-	-- or just use Telescope themes
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",

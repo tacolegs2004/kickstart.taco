@@ -8,6 +8,21 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "<leader>rs", ":RustRun <CR>")
 
+-- Split window
+vim.keymap.set("n", "ss", ":split<Return>", opts)
+vim.keymap.set("n", "sv", ":vsplit<Return>", opts)
+-- Move window
+vim.keymap.set("n", "sh", "<C-w>h")
+vim.keymap.set("n", "sk", "<C-w>k")
+vim.keymap.set("n", "sj", "<C-w>j")
+vim.keymap.set("n", "sl", "<C-w>l")
+
+-- Resize window
+vim.keymap.set("n", "<C-w><left>", "<C-w><")
+vim.keymap.set("n", "<C-w><right>", "<C-w>>")
+vim.keymap.set("n", "<C-w><up>", "<C-w>+")
+vim.keymap.set("n", "<C-w><down>", "<C-w>-")
+
 vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
@@ -80,14 +95,6 @@ require('lazy').setup({
 
   -- Git related plugins
   'tpope/vim-fugitive',
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000,
-    -- config = function()
-    --   vim.cmd([[colorscheme catppuccin-mocha]])
-    -- end
-  },
   {
     "nvim-neorg/neorg",
     lazy = false,
@@ -289,20 +296,6 @@ require('lazy').setup({
       end,
     },
   },
-
-  -- {
-  --   -- Set lualine as statusline
-  --   'nvim-lualine/lualine.nvim',
-  --   -- See `:help lualine.txt`
-  --   opts = {
-  --     options = {
-  --       icons_enabled = false,
-  --       theme = 'auto',
-  --       component_separators = '|',
-  --       section_separators = '',
-  --     },
-  --   },
-  -- },
 
   {
     -- Add indentation guides even on blank lines
@@ -770,6 +763,12 @@ cmp.setup {
   },
 }
 
+require("catppuccin").setup({
+  transparent_background = true
+})
+
+-- setup must be called before loading
+vim.cmd.colorscheme "catppuccin-mocha"
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
