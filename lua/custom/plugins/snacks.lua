@@ -7,7 +7,7 @@ return {
 		bigfile = { enabled = true },
 		dashboard = { enabled = true, example = "github" },
 		notifier = {
-			enabled = true,
+			enabled = false,
 			timeout = 3000,
 		},
 		quickfile = { enabled = true },
