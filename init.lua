@@ -175,6 +175,9 @@ require('lazy').setup({
           rust_analyzer = function()
             return true
           end,
+          ts_ls = function ()
+            return true
+          end
         },
       },
       -- Useful status updates for LSP
@@ -375,6 +378,7 @@ require('lazy').setup({
         build = 'make',
         config = function()
           vim.keymap.set("n", "<space>ff", require("telescope.builtin").find_files)
+          vim.keymap.set("n", "<space>fh", require("telescope.builtin").help_tags)
           vim.keymap.set("n", "<space>fc", function()
             require("telescope.builtin").find_files {
               cwd = vim.fn.stdpath("config")
