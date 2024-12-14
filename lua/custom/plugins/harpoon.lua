@@ -1,7 +1,7 @@
 return {
 	"ThePrimeagen/harpoon",
 	dependencies = {
-		"nvim-lua/plenary.nvim",
+		"saghen/blink.cmp",
 	},
 	config = function()
 		-- set keymaps

@@ -163,35 +163,37 @@ require('lazy').setup({
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
+  -- LSP servers and clients communicate which features they support through "capabilities".
+  --  By default, Neovim supports a subset of the LSP specification.
+  --  With blink.cmp, Neovim has *more* capabilities which are communicated to the LSP servers.
+  --  Explanation from TJ: https://youtu.be/m8C0Cq9Uv9o?t=1275
+  --
+  -- This can vary by config, but in general for nvim-lspconfig:
+  --
+
+
   {
-    -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
+      'saghen/blink.cmp',
       { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
-
-      opts = {
-        setup = {
-          rust_analyzer = function()
-            return true
-          end,
-          ts_ls = function()
-            return true
-          end
-        },
-      },
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      {
-        'j-hui/fidget.nvim',
-        opts = {}
-      },
-
-      {
-        "folke/lazydev.nvim",
-      },
     },
+
+    -- example using `opts` for defining servers
+    opts = {
+      servers = {
+        lua_ls = {},
+        ts_ls = {}
+      }
+    },
+    -- example calling setup directly for each LSP
+    config = function()
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local lspconfig = require('lspconfig')
+
+      lspconfig['lua-ls'].setup({ capabilities = capabilities })
+    end
   },
   {
     "folke/trouble.nvim",
@@ -230,33 +232,33 @@ require('lazy').setup({
       },
     },
   },
-  {
-    -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
-      {
-        'L3MON4D3/LuaSnip',
-        build = (function()
-          -- Build Step is needed for regex support in snippets
-          -- This step is not supported in many windows environments
-          -- Remove the below condition to re-enable on windows
-          if vim.fn.has 'win32' == 1 then
-            return
-          end
-          return 'make install_jsregexp'
-        end)(),
-      },
-      'saadparwaiz1/cmp_luasnip',
-
-      -- Adds LSP completion capabilities
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-
-      -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
-    },
-  },
+  -- {
+  --   -- Autocompletion
+  --   'hrsh7th/nvim-cmp',
+  --   dependencies = {
+  --     -- Snippet Engine & its associated nvim-cmp source
+  --     {
+  --       'L3MON4D3/LuaSnip',
+  --       build = (function()
+  --         -- Build Step is needed for regex support in snippets
+  --         -- This step is not supported in many windows environments
+  --         -- Remove the below condition to re-enable on windows
+  --         if vim.fn.has 'win32' == 1 then
+  --           return
+  --         end
+  --         return 'make install_jsregexp'
+  --       end)(),
+  --     },
+  --     'saadparwaiz1/cmp_luasnip',
+  --
+  --     -- Adds LSP completion capabilities
+  --     'hrsh7th/cmp-nvim-lsp',
+  --     'hrsh7th/cmp-path',
+  --
+  --     -- Adds a number of user-friendly snippets
+  --     'rafamadriz/friendly-snippets',
+  --   },
+  -- },
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',   opts = {} },
@@ -368,7 +370,7 @@ require('lazy').setup({
     'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
     dependencies = {
-      'nvim-lua/plenary.nvim',
+      'saghen/blink.cmp',
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
       -- Only load if `make` is available. Make sure you have the system
       -- requirements installed.
@@ -393,6 +395,7 @@ require('lazy').setup({
       vim.keymap.set("n", "<space>fh", require("telescope.builtin").help_tags)
       vim.keymap.set("n", "<space>ff", require("telescope.builtin").find_files)
       vim.keymap.set("n", "<space>bf", require("telescope.builtin").buffers)
+      vim.keymap.set("n", "<space>bg", require("telescope.builtin").live_grep)
       vim.keymap.set("n", "<space>fc", function()
         require("telescope.builtin").find_files {
           cwd = vim.fn.stdpath("config")
@@ -701,8 +704,8 @@ local servers = {
 require('lazydev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities = require('blink.cmp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
@@ -731,58 +734,6 @@ mason_lspconfig.setup_handlers {
       filetypes = (servers[server_name] or {}).filetypes,
     }
   end,
-}
-
--- [[ Configure nvim-cmp ]]
--- See `:help cmp`
-local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
-luasnip.config.setup {}
-
-cmp.setup {
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
-  completion = {
-    completeopt = 'menu,menuone,noinsert',
-  },
-  mapping = cmp.mapping.preset.insert {
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete {},
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-  },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-    { name = 'path' },
-  },
 }
 
 -- setup must be called before loading

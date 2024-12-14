@@ -13,7 +13,7 @@ return {
         -- },
         dependencies = {
                 -- Required.
-                "nvim-lua/plenary.nvim",
+                "saghen/blink.cmp",
 
                 -- see below for full list of optional dependencies 👇
         },
