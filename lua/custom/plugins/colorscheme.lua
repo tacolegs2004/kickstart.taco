@@ -2,6 +2,19 @@ return {
         {
                 'sainnhe/gruvbox-material',
                 lazy = false,
+                -- opts = {
+                --         transparency = true
+                -- }
+        },
+        {
+                "eldritch-theme/eldritch.nvim",
+                lazy = false,
+                priority = 1000,
+                config = function()
+                        require("eldritch").setup({
+                                transparent = true
+                        })
+                end
         },
         {
                 "folke/tokyonight.nvim",

@@ -124,6 +124,7 @@ end
 --
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
+
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -175,7 +176,7 @@ require('lazy').setup({
           rust_analyzer = function()
             return true
           end,
-          ts_ls = function ()
+          ts_ls = function()
             return true
           end
         },
@@ -376,17 +377,29 @@ require('lazy').setup({
         -- NOTE: If you are having trouble with this installation,
         --       refer to the README for telescope-fzf-native for more instructions.
         build = 'make',
-        config = function()
-          vim.keymap.set("n", "<space>ff", require("telescope.builtin").find_files)
-          vim.keymap.set("n", "<space>fh", require("telescope.builtin").help_tags)
-          vim.keymap.set("n", "<space>fc", function()
-            require("telescope.builtin").find_files {
-              cwd = vim.fn.stdpath("config")
-            }
-          end)
-        end,
       },
     },
+    config = function()
+      require("telescope").setup({
+        pickers = {
+          extensions = {
+            fzf = {}
+          }
+        }
+      })
+
+      require("telescope").load_extension("fzf")
+
+      vim.keymap.set("n", "<space>fh", require("telescope.builtin").help_tags)
+      vim.keymap.set("n", "<space>ff", require("telescope.builtin").find_files)
+      vim.keymap.set("n", "<space>bf", require("telescope.builtin").buffers)
+      vim.keymap.set("n", "<space>fc", function()
+        require("telescope.builtin").find_files {
+          cwd = vim.fn.stdpath("config")
+        }
+      end)
+    end,
+
   },
 
   "nvim-web-devicons",
@@ -773,7 +786,12 @@ cmp.setup {
 }
 
 -- setup must be called before loading
--- vim.cmd.colorscheme "catppuccin-mocha"
+require("catppuccin").setup({
+  transparent_background = true,
+  opts = function()
+    vim.cmd([[colorscheme catppuccin-mocha]])
+  end
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
